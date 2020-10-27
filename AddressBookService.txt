@@ -1,0 +1,356 @@
+#UC1
+ create database Address Book Service
+  create database Address_book_service;
+
+ ##
+   
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| payroll_service    |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.69 sec)
+
+mysql> create database Address_book_service;
+Query OK, 1 row affected (0.72 sec)
+
+mysql> show databases;
++----------------------+
+| Database             |
++----------------------+
+| address_book_service |
+| information_schema   |
+| mysql                |
+| payroll_service      |
+| performance_schema   |
+| sakila               |
+| sys                  |
+| world                |
++----------------------+
+8 rows in set (0.03 sec)
+
+#UC2
+  create table address book table with required attributes
+  
+ mysql> use address_book_service;
+ Database changed
+ mysql> create table Address_book_table(
+    -> fname varchar(100) Not null ,
+    -> lname varchar(100) not null,
+    -> Address varchar(500) Not null,
+    -> City varchar(100) Not null,
+    -> State varchar(100) Not null,
+    -> Zip varchar(100) Not null,
+    -> PhoneNumber varchar(100) Not null,
+    -> Email varchar(150) not null,
+    -> primary key(PhoneNumber)
+    -> );
+ Query OK, 0 rows affected (3.88 sec)
+  
+ 
+mysql> describe Address_book_table;
++-------------+--------------+------+-----+---------+-------+
+| Field       | Type         | Null | Key | Default | Extra |
++-------------+--------------+------+-----+---------+-------+
+| fname       | varchar(100) | NO   |     | NULL    |       |
+| lname       | varchar(100) | NO   |     | NULL    |       |
+| Address     | varchar(500) | NO   |     | NULL    |       |
+| City        | varchar(100) | NO   |     | NULL    |       |
+| State       | varchar(100) | NO   |     | NULL    |       |
+| Zip         | varchar(100) | NO   |     | NULL    |       |
+| PhoneNumber | varchar(100) | NO   | PRI | NULL    |       |
+| Email       | varchar(150) | NO   |     | NULL    |       |
++-------------+--------------+------+-----+---------+-------+
+8 rows in set (0.09 sec)
+ 
+
+#UC3
+   insert new contacts to address book
+   
+   mysql> insert into address_book_table (fname,lname,Address,City,State,Zip,PhoneNumber,Email)
+    -> values('Kirti','Kumar','Sikar','Sikar','Rajasthan','332315','91 8888888888','krtkumar@gmail.com');
+   mysql> insert into address_book_table (fname,lname,Address,City,State,Zip,PhoneNumber,Email) values('John','Kumar','XYZ','Jaipur','Rajasthan','333333','91 8888777777','jhon@yahoo.com'),('Bond','james','DEF','Patna','Patna','111111','91 1234567894','bond.james@outlook.com');
+    Query OK, 2 rows affected (0.22 sec)
+   Records: 2  Duplicates: 0  Warnings: 0
+
+   
+   mysql> select *from Address_book_table;
++-------+-------+---------+--------+-----------+--------+---------------+------------------------+
+| fname | lname | Address | City   | State     | Zip    | PhoneNumber   | Email                  |
++-------+-------+---------+--------+-----------+--------+---------------+------------------------+
+| Bond  | james | DEF     | Patna  | Patna     | 111111 | 91 1234567894 | bond.james@outlook.com |
+| John  | Kumar | XYZ     | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com         |
+| Kirti | Kumar | Sikar   | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com     |
++-------+-------+---------+--------+-----------+--------+---------------+------------------------+
+3 rows in set (0.00 sec)
+
+#UC4
+  ability to edit existing contact details using their name
+  
+  mysql> update Address_book_table
+    -> set fname='James',lname='Bond' where fname='Bond' and lname='james';
+Query OK, 1 row affected (0.11 sec)
+
+  mysql> update Address_book_table
+    -> set Address='Raiganj' where fname='James';
+Query OK, 1 row affected (1.78 sec)
+
+   mysql> update Address_book_table
+    -> set Address='Haweli' where fname='John';
+Query OK, 1 row affected (0.44 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> update Address_book_table
+    -> set PhoneNumber='91 8868886887' where lname='Bond';
+Query OK, 1 row affected (0.15 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+
+ mysql> select *from Address_book_table;
++-------+-------+---------+--------+-----------+--------+---------------+------------------------+
+| fname | lname | Address | City   | State     | Zip    | PhoneNumber   | Email                  |
++-------+-------+---------+--------+-----------+--------+---------------+------------------------+
+| James | Bond  | Raiganj | Patna  | Patna     | 111111 | 91 8868886887 | bond.james@outlook.com |
+| John  | Kumar | Haweli  | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com         |
+| Kirti | Kumar | Sikar   | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com     |
++-------+-------+---------+--------+-----------+--------+---------------+------------------------+
+3 rows in set (0.00 sec)
+
+
+ #UC5
+  ability to delete a person using persons name
+   mysql> delete from Address_book_table where fname='James' and lname='Bond';
+   Query OK, 1 row affected (0.20 sec)
+
+mysql> select *from Address_book_table;
++-------+-------+---------+--------+-----------+--------+---------------+--------------------+
+| fname | lname | Address | City   | State     | Zip    | PhoneNumber   | Email              |
++-------+-------+---------+--------+-----------+--------+---------------+--------------------+
+| John  | Kumar | Haweli  | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     |
+| Kirti | Kumar | Sikar   | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++-------+-------+---------+--------+-----------+--------+---------------+--------------------+
+2 rows in set (0.10 sec)
+
+
+  # UC6
+  ability to retrieve persons belonging to city or state from address book
+
+   mysql> select *from Address_book_table where City='Sikar';
++-------+-------+---------+-------+-----------+--------+---------------+--------------------+
+| fname | lname | Address | City  | State     | Zip    | PhoneNumber   | Email              |
++-------+-------+---------+-------+-----------+--------+---------------+--------------------+
+| Kirti | Kumar | Sikar   | Sikar | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++-------+-------+---------+-------+-----------+--------+---------------+--------------------+
+1 row in set (0.00 sec)
+
+  mysql> select *from Address_book_table where State='Rajasthan';
++-------+-------+---------+--------+-----------+--------+---------------+--------------------+
+| fname | lname | Address | City   | State     | Zip    | PhoneNumber   | Email              |
++-------+-------+---------+--------+-----------+--------+---------------+--------------------+
+| John  | Kumar | Haweli  | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     |
+| Kirti | Kumar | Sikar   | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++-------+-------+---------+--------+-----------+--------+---------------+--------------------+
+2 rows in set (0.00 sec)
+
+
+#UC7
+  ability to understand the size of address book by city or state
+
+  
+mysql> select City,count(*) from Address_book_table group by City;
++--------+----------+
+| City   | count(*) |
++--------+----------+
+| Jaipur |        1 |
+| Sikar  |        1 |
++--------+----------+
+2 rows in set (0.00 sec)
+
+
+mysql> select State,count(*) from Address_book_table group by State;
++-----------+----------+
+| State     | count(*) |
++-----------+----------+
+| Rajasthan |        2 |
++-----------+----------+
+1 row in set (0.00 sec)
+
+
+#UC8
+ ability to retrieve entries sorted alphabetically by persons name from given city
+  
+  adding 4 more entrie first
+
+ ----->>
+         ysql> insert into address_book_table (fname,lname,Address,City,State,Zip,PhoneNumber,Email) values('Johny','Kumaryadav','XYZWS','Jaipur','Rajasthan','333335','91 8888777758','jhony@yahoo.com'),('Bondy','jameshy','DEFCV','Sikar','Rajasthan','111112','91 6666667874','bh@outlook.com'),('Keshav','Ahmed','DEFCV12','Sikar','Rajasthan','121112','91 6656767874','bhkld@outlook.com'),('Lokesh','Yadav','DEFCV1236','Jaipur','Rajasthan','111562','91 6666237874','ishh@outlook.com');
+Query OK, 4 rows affected (0.25 sec)
+Records: 4  Duplicates: 0  Warnings: 0
+
+mysql> select *from Address_book_table;
++--------+------------+-----------+--------+-----------+--------+---------------+--------------------+
+| fname  | lname      | Address   | City   | State     | Zip    | PhoneNumber   | Email              |
++--------+------------+-----------+--------+-----------+--------+---------------+--------------------+
+| Keshav | Ahmed      | DEFCV12   | Sikar  | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  |
+| Lokesh | Yadav      | DEFCV1236 | Jaipur | Rajasthan | 111562 | 91 6666237874 | ishh@outlook.com   |
+| Bondy  | jameshy    | DEFCV     | Sikar  | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     |
+| Johny  | Kumaryadav | XYZWS     | Jaipur | Rajasthan | 333335 | 91 8888777758 | jhony@yahoo.com    |
+| John   | Kumar      | Haweli    | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     |
+| Kirti  | Kumar      | Sikar     | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++--------+------------+-----------+--------+-----------+--------+---------------+--------------------+
+6 rows in set (0.10 sec)
+
+  Output---->>
+     
+     
+mysql> select *from Address_book_table where City='Sikar' order by fname;
++--------+---------+---------+-------+-----------+--------+---------------+--------------------+
+| fname  | lname   | Address | City  | State     | Zip    | PhoneNumber   | Email              |
++--------+---------+---------+-------+-----------+--------+---------------+--------------------+
+| Bondy  | jameshy | DEFCV   | Sikar | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     |
+| Keshav | Ahmed   | DEFCV12 | Sikar | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  |
+| Kirti  | Kumar   | Sikar   | Sikar | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++--------+---------+---------+-------+-----------+--------+---------------+--------------------+
+3 rows in set (0.00 sec)
+
+mysql> select *from Address_book_table where City='Sikar' order by lname;
++--------+---------+---------+-------+-----------+--------+---------------+--------------------+
+| fname  | lname   | Address | City  | State     | Zip    | PhoneNumber   | Email              |
++--------+---------+---------+-------+-----------+--------+---------------+--------------------+
+| Keshav | Ahmed   | DEFCV12 | Sikar | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  |
+| Bondy  | jameshy | DEFCV   | Sikar | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     |
+| Kirti  | Kumar   | Sikar   | Sikar | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++--------+---------+---------+-------+-----------+--------+---------------+--------------------+
+3 rows in set (0.00 sec) 
+
+  #UC9
+ ability to add name and type and identify using them
+     
+  Added Name of the book as 'name' Column
+  mysql> alter table Address_book_table
+    -> add name varchar(200) first;
+No connection. Trying to reconnect...
+Connection id:    8
+Current database: address_book_service
+
+Query OK, 0 rows affected (2.70 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> select *from Address_book_table;
++------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+
+| name | fname  | lname      | Address   | City   | State     | Zip    | PhoneNumber   | Email              |
++------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+
+| NULL | Keshav | Ahmed      | DEFCV12   | Sikar  | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  |
+| NULL | Lokesh | Yadav      | DEFCV1236 | Jaipur | Rajasthan | 111562 | 91 6666237874 | ishh@outlook.com   |
+| NULL | Bondy  | jameshy    | DEFCV     | Sikar  | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     |
+| NULL | Johny  | Kumaryadav | XYZWS     | Jaipur | Rajasthan | 333335 | 91 8888777758 | jhony@yahoo.com    |
+| NULL | John   | Kumar      | Haweli    | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     |
+| NULL | Kirti  | Kumar      | Sikar     | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |
++------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+
+6 rows in set (0.00 sec)
+
+Renamed name to address_book_name
+    --->
+        mysql> alter table Address_book_table
+    -> rename column name to Address_book_name;
+Query OK, 0 rows affected (1.40 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+added new column 'Type'
+   --->
+        mysql> alter table Address_book_table
+    -> add Type varchar(100) not null after Email;
+Query OK, 0 rows affected (0.71 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+  
+mysql> select *from Address_book_table;
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+------+
+| Address_book_name | fname  | lname      | Address   | City   | State     | Zip    | PhoneNumber   | Email              | Type |
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+------+
+| NULL              | Keshav | Ahmed      | DEFCV12   | Sikar  | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  |      |
+| NULL              | Lokesh | Yadav      | DEFCV1236 | Jaipur | Rajasthan | 111562 | 91 6666237874 | ishh@outlook.com   |      |
+| NULL              | Bondy  | jameshy    | DEFCV     | Sikar  | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     |      |
+| NULL              | Johny  | Kumaryadav | XYZWS     | Jaipur | Rajasthan | 333335 | 91 8888777758 | jhony@yahoo.com    |      |
+| NULL              | John   | Kumar      | Haweli    | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     |      |
+| NULL              | Kirti  | Kumar      | Sikar     | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com |      |
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+------+
+6 rows in set (0.11 sec)
+  
+Updated book name and type
+  ->>>>>>
+
+    mysql>  update Address_book_table
+    ->  set Address_book_name='Book_1',Type='Friends' where fname in('Keshav','Kirti','Bondy');
+Query OK, 3 rows affected (0.22 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select *from Address_book_table;
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+---------+
+| Address_book_name | fname  | lname      | Address   | City   | State     | Zip    | PhoneNumber   | Email              | Type    |
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+---------+
+| Book_1            | Keshav | Ahmed      | DEFCV12   | Sikar  | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  | Friends |
+| NULL              | Lokesh | Yadav      | DEFCV1236 | Jaipur | Rajasthan | 111562 | 91 6666237874 | ishh@outlook.com   |         |
+| Book_1            | Bondy  | jameshy    | DEFCV     | Sikar  | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     | Friends |
+| NULL              | Johny  | Kumaryadav | XYZWS     | Jaipur | Rajasthan | 333335 | 91 8888777758 | jhony@yahoo.com    |         |
+| NULL              | John   | Kumar      | Haweli    | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     |         |
+| Book_1            | Kirti  | Kumar      | Sikar     | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com | Friends |
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+---------+
+6 rows in set (0.00 sec)
+
+mysql>  update Address_book_table
+    ->  set Address_book_name='Book_2',Type='Family' where fname in('Johny','John');
+Query OK, 2 rows affected (0.09 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql>  update Address_book_table
+    ->  set Address_book_name='Book_3',Type='Profession' where fname='Lokesh';
+Query OK, 1 row affected (0.80 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select *from Address_book_table;
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+------------+
+| Address_book_name | fname  | lname      | Address   | City   | State     | Zip    | PhoneNumber   | Email              | Type       |
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+------------+
+| Book_1            | Keshav | Ahmed      | DEFCV12   | Sikar  | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  | Friends    |
+| Book_3            | Lokesh | Yadav      | DEFCV1236 | Jaipur | Rajasthan | 111562 | 91 6666237874 | ishh@outlook.com   | Profession |
+| Book_1            | Bondy  | jameshy    | DEFCV     | Sikar  | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     | Friends    |
+| Book_2            | Johny  | Kumaryadav | XYZWS     | Jaipur | Rajasthan | 333335 | 91 8888777758 | jhony@yahoo.com    | Family     |
+| Book_2            | John   | Kumar      | Haweli    | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     | Family     |
+| Book_1            | Kirti  | Kumar      | Sikar     | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com | Friends    |
++-------------------+--------+------------+-----------+--------+-----------+--------+---------------+--------------------+------------+
+6 rows in set (0.00 sec)
+   
+
+mysql> select *from Address_book_table where Address_book_name='Book_2' or Type='Friends';
++-------------------+--------+------------+---------+--------+-----------+--------+---------------+--------------------+---------+
+| Address_book_name | fname  | lname      | Address | City   | State     | Zip    | PhoneNumber   | Email              | Type    |
++-------------------+--------+------------+---------+--------+-----------+--------+---------------+--------------------+---------+
+| Book_1            | Keshav | Ahmed      | DEFCV12 | Sikar  | Rajasthan | 121112 | 91 6656767874 | bhkld@outlook.com  | Friends |
+| Book_1            | Bondy  | jameshy    | DEFCV   | Sikar  | Rajasthan | 111112 | 91 6666667874 | bh@outlook.com     | Friends |
+| Book_2            | Johny  | Kumaryadav | XYZWS   | Jaipur | Rajasthan | 333335 | 91 8888777758 | jhony@yahoo.com    | Family  |
+| Book_2            | John   | Kumar      | Haweli  | Jaipur | Rajasthan | 333333 | 91 8888777777 | jhon@yahoo.com     | Family  |
+| Book_1            | Kirti  | Kumar      | Sikar   | Sikar  | Rajasthan | 332315 | 91 8888888888 | krtkumar@gmail.com | Friends |
++-------------------+--------+------------+---------+--------+-----------+--------+---------------+--------------------+---------+
+5 rows in set (0.00 sec)
+
+
+#UC10
+  ability to get number of contact persons that is count by type
+
+  
+mysql> select Type,Count(Type) from Address_book_table group by Type;
++------------+-------------+
+| Type       | Count(Type) |
++------------+-------------+
+| Friends    |           3 |
+| Profession |           1 |
+| Family     |           2 |
++------------+-------------+
+3 rows in set (0.00 sec)
+
